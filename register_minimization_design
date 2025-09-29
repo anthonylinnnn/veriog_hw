@@ -5,14 +5,14 @@ module register_minimization_design (
    output reg   [3:0] q=0,
    input        [7:0]in,
    output reg   [7:0]out,
-   output reg   [7:00]R1,
-   output reg   [7:00]R2,
-   output reg   [7:00]R3,
-   output reg   [7:00]R4,
-   output reg   [7:00]R5,
-   output reg   [7:00]R6,
-   output reg   [7:00]R7,
-   output reg   [7:00]R8
+   output reg   [7:0]R1,
+   output reg   [7:0]R2,
+   output reg   [7:0]R3,
+   output reg   [7:0]R4,
+   output reg   [7:0]R5,
+   output reg   [7:0]R6,
+   output reg   [7:0]R7,
+   output reg   [7:0]R8
 );
 
 reg [7:0] reg_0;
