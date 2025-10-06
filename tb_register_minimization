@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 
 module tb_register_minimization;
     
@@ -16,6 +17,7 @@ module tb_register_minimization;
     wire [7:0] R7;
     wire [7:0] R8;
     
+    // UUT
     register_minimization_design uut(
         .clk(clk),
         .rst(rst),
@@ -32,24 +34,62 @@ module tb_register_minimization;
         .R8(R8)
     );
    
-always #5 clk = ~clk;
+    // Clock
+    always #5 clk = ~clk;
+
+    // 測試序列
+    reg [7:0] test_input [0:9];
+    reg [7:0] expected_output [0:8];
+    integer i;
+
     initial begin
-    
-        clk = 1;
+        // 初始化
+        clk = 0;
         rst = 1;
-        #10 rst = 0;
+        in  = 8'd0;
         
-        #10 rst = 0; in = 8'd1;
-        #10 rst = 0; in = 8'd16;
-        #10 rst = 0; in = 8'd32;
-        #10 in = 8'd48;
-        #10 in = 8'd64;
-        #10 in = 8'd80;
-        #10 in = 8'd96;
-        #10 in = 8'd112;
-        #10 in = 8'd128;
-        #10 in = 8'd255;
+        // 測試輸入 (0~9)
+        test_input[0] = 8'd0;
+        test_input[1] = 8'd1;
+        test_input[2] = 8'd2;
+        test_input[3] = 8'd3;
+        test_input[4] = 8'd4;
+        test_input[5] = 8'd5;
+        test_input[6] = 8'd6;
+        test_input[7] = 8'd7;
+        test_input[8] = 8'd8;
+        test_input[9] = 8'd9;
+
+        // 預期輸出序列 (0918527346)
+        expected_output[0] = 8'd0;
+        expected_output[1] = 8'd9;
+        expected_output[2] = 8'd1;
+        expected_output[3] = 8'd8;
+        expected_output[4] = 8'd5;
+        expected_output[5] = 8'd2;
+        expected_output[6] = 8'd7;
+        expected_output[7] = 8'd3;
+        expected_output[8] = 8'd4;
+        expected_output[9] = 8'd6;
+
+        // Reset 維持 25ns
+        #25; 
+        rst = 0;
+
+        // 餵 input 0~9
+        for (i = 0; i < 10; i = i + 1) begin
+            @(posedge clk); #1; in = test_input[i];
+        end
+
+        // 繼續等輸出出來
+        for (i = 0; i < 10; i = i + 1) begin
+            @(posedge clk);
+            $display("Cycle %0d: out = %0d, expected = %0d %s", 
+                     i+8, out, expected_output[i], 
+                     (out==expected_output[i]) ? "OK" : "MISMATCH");
+        end
+
+        #20;
+        $stop;
     end
-    
-  
 endmodule
