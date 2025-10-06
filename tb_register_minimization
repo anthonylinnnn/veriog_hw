@@ -1,81 +1,48 @@
 module tb_register_minimization;
 
-    
-
     reg clk;
-
     reg rst;
-
     reg [7:0] in;
-
-    
-
     wire [3:0] q;
-
     wire [7:0] out;
-
     wire [7:0] R1;
-
     wire [7:0] R2;
-
     wire [7:0] R3;
-
     wire [7:0] R4;
-
     wire [7:0] R5;
-
     wire [7:0] R6;
-
     wire [7:0] R7;
-
     wire [7:0] R8;
-
-    
 
     register_minimization_design uut(
 
         .clk(clk),
-
         .rst(rst),
-
         .q(q),
-
         .in(in),
-
         .out(out),
-
         .R1(R1),
-
         .R2(R2),
-
         .R3(R3),
-
         .R4(R4),
-
         .R5(R5),
-
         .R6(R6),
-
         .R7(R7),
-
         .R8(R8)
-
     );
 
    
 
 always #5 clk = ~clk;
 
-      // 最終、最簡單、最正確的 initial block
     initial begin
-        // 1. 初始化並正確重置
+
         clk = 0;
         rst = 1;
         in  = 8'd0;
         #25;
         rst = 0;
     
-        // 2. 按照 0, 1, 2... 的自然順序提供輸入
         @(posedge clk); #1; in = 8'd0;
         @(posedge clk); #1; in = 8'd1;
         @(posedge clk); #1; in = 8'd2;
@@ -87,15 +54,10 @@ always #5 clk = ~clk;
         @(posedge clk); #1; in = 8'd8;
         @(posedge clk); #1; in = 8'd9;
     
-        // 3. 持續提供時脈，讓管線中剩餘的資料能流出
-        //    這是為了解決 '6' 沒有出現的問題
-        #200; // <<<<<<<<<<< 讓模擬再多跑 10 個週期
+
+        #200;
     
-        $finish; // 結束模擬
+        $finish;
     end
-
-    
-
-  
 
 endmodule
